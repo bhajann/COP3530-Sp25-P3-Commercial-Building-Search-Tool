@@ -23,9 +23,7 @@ def load_buildings():
                 # Clean the record into usable fields
                 try:
                     building = {
-                        "id": str(
-                            id_counter
-                        ),  # You can also use a field like `bldg_count`
+                        "id": id_counter,
                         "city": row["city_name"],
                         "county": row["countyname"],
                         "type": row["reported_propertytype"],

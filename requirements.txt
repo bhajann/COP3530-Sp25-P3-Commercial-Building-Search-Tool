@@ -1,2 +1,1 @@
-# Potentially a gui library
-# Tkinter UI
+# GUI Library - Tkinter UI - Not a pip package, rather baseline Python. Either already part of your Python installation, or installed as a separate component or system package.

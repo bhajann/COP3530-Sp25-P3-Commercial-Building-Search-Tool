@@ -16,6 +16,7 @@ class BuildingSearchApp:
         self.root.geometry("800x500")
 
         self.buildings = load_buildings()
+        print(f"{len(self.buildings)} buildings loaded.")
         self.build_index()
 
         # Search Input
@@ -64,31 +65,60 @@ class BuildingSearchApp:
         self.time_label.grid(row=5, column=0, columnspan=4, pady=10)
 
     def build_index(self):
-        self.hash_table = HashTable(size=100_000)
-        self.b_tree = BTree(t=3)
-        for b in self.buildings:
-            self.hash_table.insert(b["id"], b)
-            self.b_tree.insert(b["id"], b)
+        self.indices = {}
+
+        for buildings_pos, b in enumerate(self.buildings):
+            for key, value in b.items():
+                # TODO: Can bring in more fields if we want
+                if key not in ['id', 'city', 'year_built']:
+                    continue
+
+                if key not in self.indices:
+                    self.indices[key] = {}
+
+                if "hash" not in self.indices[key]:
+                    self.indices[key]["hash"] = HashTable(size=2_300_000)
+
+                if "btree" not in self.indices[key]:
+                    self.indices[key]["btree"] = BTree(t=3)
+
+                hash_table_search = self.indices[key]["hash"].search(value)
+                b_tree_search = self.indices[key]["btree"].search(value)
+
+                if hash_table_search is None:
+                    hash_table_search = []
+
+                if b_tree_search is None:
+                    b_tree_search = []
+
+                hash_table_search.append(buildings_pos)
+                b_tree_search.append(buildings_pos)
+
+                self.indices[key]["hash"].insert(value, hash_table_search)
+                self.indices[key]["btree"].insert(value, b_tree_search)
 
     def perform_search(self):
         search_type = self.search_by.get()
-        value = self.search_entry.get()
+        search_key = self.search_entry.get()
         ds_type = self.ds_var.get()
+
+        try:
+            # TODO: Can bring in converting to the float datatype if we want to add any float fields
+            search_key = int(search_key)
+        except ValueError:
+            None
 
         # Time the search
         start = time.time()
         results = []
 
-        if ds_type == "hash":
-            for b in self.buildings:
-                if str(b[search_type]) == value:
-                    results.append(b)
-        else:
-            # Only id is indexed in BTree
-            if search_type == "id":
-                b = self.b_tree.search(value)
-                if b:
-                    results.append(b)
+        idx_results = self.indices[search_type][ds_type].search(search_key)
+
+        # print(idx_results)
+
+        if idx_results:
+            for buildings_pos in idx_results:
+                results.append(self.buildings[buildings_pos])
 
         elapsed = (time.time() - start) * 1000  # ms
         self.display_results(results, elapsed)
