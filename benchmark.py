@@ -44,7 +44,7 @@ def benchmark_structures(buildings):
 
     #### HASH TABLE ####
     print("Benchmarking Hash Table...")
-    ht = HashTable(size=5000)
+    ht = HashTable(size=150000)
 
     start_time = time.time()
     for b in buildings:
@@ -80,6 +80,7 @@ def benchmark_structures(buildings):
     print(f"B-Tree     - Insert Time: {bt_insert_time:.4f}s")
     print(f"B-Tree     - Search Time (100 keys): {bt_search_time:.4f}s")
     print("--------------------------\n")
+    return (ht_insert_time, bt_insert_time)
 
 
 if __name__ == "__main__":

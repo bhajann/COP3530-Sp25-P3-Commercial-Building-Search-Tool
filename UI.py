@@ -1,5 +1,4 @@
 # UI.py
-
 import tkinter as tk
 from tkinter import ttk
 import time
@@ -7,6 +6,8 @@ import time
 from hashTable import HashTable
 from btree import BTree
 from benchmark import load_buildings  # reuses your existing data loader
+from benchmark import benchmark_structures
+from tkinter import PhotoImage
 
 
 class BuildingSearchApp:
@@ -15,9 +16,24 @@ class BuildingSearchApp:
         self.root.title("Commercial Building Search Tool")
         self.root.geometry("800x500")
 
+        self.root.update()
+        self.image = PhotoImage(file="rainbowcat.gif")
+        self.image = self.image.subsample(2,2)
+        self.imageLabel = tk.Label(root, image=self.image)
+        self.imageLabel.grid(row=0, column=0, columnspan=4, pady=20)
+        self.loadText = tk.Label(root, text="Loading data, this might take a minute.",font=("Arial", 20))
+        self.loadText.place(x=0, y=360)
+
+        self.root.update()
         self.buildings = load_buildings()
         print(f"{len(self.buildings)} buildings loaded.")
+        self.dataLoaded = tk.Label(root, text="Data Loaded. Now loading Data Structures...", font=("Arial", 20))
+        self.dataLoaded.place(x=0, y=395)
+        self.root.update()
         self.build_index()
+        self.loadText.destroy()
+        self.dataLoaded.destroy()
+        self.imageLabel.destroy()
 
         # Search Input
         tk.Label(root, text="Search By:").grid(
@@ -37,6 +53,13 @@ class BuildingSearchApp:
         self.ds_var = tk.StringVar(value="hash")
         tk.Label(root, text="Choose Data Structure:").grid(
             row=2, column=0, padx=10, sticky="w"
+        )
+        #-----------------------------------------------------
+        tk.Label(root, text="Compare Build Times:").grid(
+            row=3, column=0, padx=10, sticky="w"
+        )
+        tk.Button(root, text="Compare", command=self.compare).grid(
+            row=3, column=1, pady=10, sticky="w"
         )
         tk.Radiobutton(
             root, text="Hash Table", variable=self.ds_var, value="hash"
@@ -64,6 +87,7 @@ class BuildingSearchApp:
         self.time_label = tk.Label(root, text="Execution Time: -- ms")
         self.time_label.grid(row=5, column=0, columnspan=4, pady=10)
 
+
     def build_index(self):
         self.indices = {}
 
@@ -77,7 +101,7 @@ class BuildingSearchApp:
                     self.indices[key] = {}
 
                 if "hash" not in self.indices[key]:
-                    self.indices[key]["hash"] = HashTable(size=2_300_000)
+                    self.indices[key]["hash"] = HashTable(size=150000)
 
                 if "btree" not in self.indices[key]:
                     self.indices[key]["btree"] = BTree(t=3)
@@ -131,9 +155,17 @@ class BuildingSearchApp:
             )
         self.time_label.config(text=f"Execution Time: {elapsed:.2f} ms")
 
+
     def clear_results(self):
         self.tree.delete(*self.tree.get_children())
         self.time_label.config(text="Execution Time: -- ms")
+    def compare(self):
+        hashTime, BTime = benchmark_structures(self.buildings)
+        self.insertTime = tk.Label(root, text=f"Hash Table Execution Time: {hashTime:.2f} ms. B Tree Execution Time {BTime:.2f} ms")
+        self.insertTime.grid(row=6, column=0, columnspan=4, pady=10)
+
+
+
 
 
 if __name__ == "__main__":
