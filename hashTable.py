@@ -9,9 +9,11 @@ class HashTable:
     def __init__(self, size=1000):
         self.size = size
         self.table = [[] for i in range(size)]
+
     #hash function
     def _hash(self, key):
         return hash(key) % self.size
+    
     #inserts each hashed element into the table and uses array buckets (seperate chaining) to resolve collisions
     def insert(self, key, value):
         idx = self._hash(key)
@@ -23,6 +25,7 @@ class HashTable:
                 arrayBucket[i] = (key, value)
                 return
         arrayBucket.append((key, value))
+        
     #searches through the array buckets
     def search(self, key):
         idx = self._hash(key)
