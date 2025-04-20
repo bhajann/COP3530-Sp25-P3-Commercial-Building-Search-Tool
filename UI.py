@@ -87,7 +87,6 @@ class BuildingSearchApp:
         self.time_label = tk.Label(root, text="Execution Time: -- ms")
         self.time_label.grid(row=5, column=0, columnspan=4, pady=10)
 
-
     def build_index(self):
         self.indices = {}
 
@@ -155,17 +154,14 @@ class BuildingSearchApp:
             )
         self.time_label.config(text=f"Execution Time: {elapsed:.2f} ms")
 
-
     def clear_results(self):
         self.tree.delete(*self.tree.get_children())
         self.time_label.config(text="Execution Time: -- ms")
+
     def compare(self):
         hashTime, BTime = benchmark_structures(self.buildings)
         self.insertTime = tk.Label(root, text=f"Hash Table Execution Time: {hashTime:.2f} s. B Tree Execution Time {BTime:.2f} s")
         self.insertTime.grid(row=6, column=0, columnspan=4, pady=10)
-
-
-
 
 
 if __name__ == "__main__":
