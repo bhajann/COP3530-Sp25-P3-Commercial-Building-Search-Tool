@@ -18,3 +18,26 @@ https://web.archive.org/web/20240507063457/https://data.openei.org/submissions/9
 - Building Area (mean)
 - Year Built (mean)
 - Number of Stories
+
+## Installation:
+Most Python installations come with the GUI library Tkinter (e.g. Windows), but if they do not, here is how you install that on a few different operating systems:
+
+### Ubuntu:
+```sh
+sudo apt install python3-tk
+```
+
+### Mac:
+```sh
+brew install python-tk
+```
+
+### Verify installation:
+```python
+python3 -m tkinter # This brings up a test Tkinter window
+```
+
+## Opening the program:
+```sh
+python3 UI.py
+```
