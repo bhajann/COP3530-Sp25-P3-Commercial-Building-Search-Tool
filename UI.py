@@ -161,7 +161,7 @@ class BuildingSearchApp:
         self.time_label.config(text="Execution Time: -- ms")
     def compare(self):
         hashTime, BTime = benchmark_structures(self.buildings)
-        self.insertTime = tk.Label(root, text=f"Hash Table Execution Time: {hashTime:.2f} ms. B Tree Execution Time {BTime:.2f} ms")
+        self.insertTime = tk.Label(root, text=f"Hash Table Execution Time: {hashTime:.2f} s. B Tree Execution Time {BTime:.2f} s")
         self.insertTime.grid(row=6, column=0, columnspan=4, pady=10)
 
 
