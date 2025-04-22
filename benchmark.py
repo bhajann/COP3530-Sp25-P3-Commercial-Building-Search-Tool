@@ -11,16 +11,17 @@ from btree import BTree
 DATA_DIR = "data/"
 CSV_FILES = [f for f in os.listdir(DATA_DIR) if f.endswith(".csv")]
 
+#running this file prints out results but the same functions are better displayed in the UI
 
+#load buildings is the function used to retrieve the data and store it
 def load_buildings():
     buildings = []
     id_counter = 0  # Use to generate unique keys if needed
-
     for file in CSV_FILES:
         with open(os.path.join(DATA_DIR, file), "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                # Clean the record into usable fields
+                # Cleans the record into usable fields
                 try:
                     building = {
                         "id": id_counter,
@@ -38,11 +39,10 @@ def load_buildings():
                     print(f"Skipping row due to error: {e}")
     return buildings
 
-
+#this function times and tests how fast the b tree and hash table run and gives us the values.
 def benchmark_structures(buildings):
     print(f"\nLoaded {len(buildings)} building records.\n")
 
-    #### HASH TABLE ####
     print("Benchmarking Hash Table...")
     ht = HashTable(size=150000)
 
@@ -51,7 +51,7 @@ def benchmark_structures(buildings):
         ht.insert(b["id"], b)
     ht_insert_time = time.time() - start_time
 
-    # Sample 100 random keys for search
+    # This function samples 100 random keys for search
     sample_ids = random.sample([b["id"] for b in buildings], min(100, len(buildings)))
 
     start_time = time.time()
@@ -59,7 +59,6 @@ def benchmark_structures(buildings):
         result = ht.search(key)
     ht_search_time = time.time() - start_time
 
-    #### B-TREE ####
     print("\nBenchmarking B-Tree...")
     bt = BTree(t=3)
 
@@ -73,7 +72,6 @@ def benchmark_structures(buildings):
         result = bt.search(key)
     bt_search_time = time.time() - start_time
 
-    #### RESULTS ####
     print("\n--- Benchmark Results ---")
     print(f"Hash Table - Insert Time: {ht_insert_time:.4f}s")
     print(f"Hash Table - Search Time (100 keys): {ht_search_time:.4f}s")

@@ -8,12 +8,12 @@ class TreeNode:
         self.keys: List[Tuple[Any, Any]] = []
         self.children: List["TreeNode"] = []
 
-
+#B tree implementation built from key value pairs. also keeps track of children and leaves for the nodes
 class BTree:
     def __init__(self, t: int):
         self.t = t
         self.root = TreeNode(t)
-
+    #prints the inorder traversal
     def traverse(self, node=None):
         if node is None:
             node = self.root
@@ -23,7 +23,7 @@ class BTree:
             print(node.keys[i], end=" ")
         if not node.leaf:
             self.traverse(node.children[-1])
-
+    #retrieves a specified value and returns it
     def search(self, k, node=None):
         if node is None:
             node = self.root
@@ -36,7 +36,7 @@ class BTree:
             return None
         else:
             return self.search(k, node.children[i])
-
+    #inserts a value. if the root is full, the root splits and a new root is created
     def insert(self, k, v):
         root = self.root
         if len(root.keys) == 2 * self.t - 1:
@@ -47,7 +47,7 @@ class BTree:
             self.root = new_root
         else:
             self._insert_non_full(root, k, v)
-
+    #function used in the insert function to insert the root once the root not being full is confirmed or fixed
     def _insert_non_full(self, node: TreeNode, k, v):
         i = len(node.keys) - 1
         if node.leaf:
@@ -65,7 +65,7 @@ class BTree:
                 if k > node.keys[i][0]:
                     i += 1
             self._insert_non_full(node.children[i], k, v)
-
+    #function used in the insert function to split the child node at index i to keep the tree balanced
     def _split_child(self, parent: TreeNode, i: int):
         t = self.t
         full_child = parent.children[i]

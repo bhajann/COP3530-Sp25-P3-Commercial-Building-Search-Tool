@@ -16,6 +16,7 @@ class BuildingSearchApp:
         self.root.title("Commercial Building Search Tool")
         self.root.geometry("800x500")
 
+        #adds the cat gifs (can be replaced with any png or gif file. although we could not get gifs to animate with base python)
         self.root.update()
         self.image = PhotoImage(file="rainbowcat.gif")
         self.image = self.image.subsample(2,2)
@@ -24,6 +25,7 @@ class BuildingSearchApp:
         self.loadText = tk.Label(root, text="Loading data, this might take a minute.",font=("Arial", 20))
         self.loadText.place(x=0, y=360)
 
+        #calls to data we need to load and fixes the screen around wwhats happening
         self.root.update()
         self.buildings = load_buildings()
         print(f"{len(self.buildings)} buildings loaded.")
@@ -92,7 +94,7 @@ class BuildingSearchApp:
 
         for buildings_pos, b in enumerate(self.buildings):
             for key, value in b.items():
-                # TODO: Can bring in more fields if we want
+                # TODO: Can bring in more fields if we want (we left this part out so that our code runs in a reasonable time but if wanted adding more fields should be simple)
                 if key not in ['id', 'city', 'year_built']:
                     continue
 
@@ -158,6 +160,7 @@ class BuildingSearchApp:
         self.tree.delete(*self.tree.get_children())
         self.time_label.config(text="Execution Time: -- ms")
 
+    #compares data structure initialization rather than search time.
     def compare(self):
         hashTime, BTime = benchmark_structures(self.buildings)
         self.insertTime = tk.Label(root, text=f"Hash Table Execution Time: {hashTime:.2f} s. B Tree Execution Time {BTime:.2f} s")
