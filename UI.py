@@ -17,6 +17,7 @@ class BuildingSearchApp:
         self.root.geometry("800x500")
 
         #adds the cat gifs (can be replaced with any png or gif file. although we could not get gifs to animate with base python)
+        #not shown in the video cause it takes a long time to show but loading screen is just an image(check cat in github repo) and text explaining it takes a while
         self.root.update()
         self.image = PhotoImage(file="rainbowcat.gif")
         self.image = self.image.subsample(2,2)
